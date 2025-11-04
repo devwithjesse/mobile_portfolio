@@ -1,24 +1,26 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+// app/_layout.tsx
+import React, { useState, useMemo } from "react";
+import { Stack } from "expo-router";
+import { PaperProvider, MD3DarkTheme, MD3LightTheme } from "react-native-paper";
+import { useColorScheme } from "react-native";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+export const ThemeContext = React.createContext({
+  isDark: true,
+  toggleTheme: () => {},
+});
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const systemScheme = useColorScheme();
+  const [isDark, setIsDark] = useState(systemScheme === "dark");
+  const toggleTheme = () => setIsDark((p) => !p);
+
+  const paperTheme = useMemo(() => (isDark ? MD3DarkTheme : MD3LightTheme), [isDark]);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+      <PaperProvider theme={paperTheme}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </PaperProvider>
+    </ThemeContext.Provider>
   );
 }

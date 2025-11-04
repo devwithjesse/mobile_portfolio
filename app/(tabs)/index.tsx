@@ -1,98 +1,99 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+// app/(tabs)/index.tsx
+import React from "react";
+import { ScrollView, View, StyleSheet, Linking } from "react-native";
+import { Avatar, Title, Paragraph, Button, Card, Chip, useTheme } from "react-native-paper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const theme = useTheme();
+  const router = useRouter();
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const openLink = (url: string) => Linking.openURL(url);
+
+  return (
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+      contentContainerStyle={{ padding: 16 }}
+    >
+      {/* Profile Header */}
+      <View style={styles.profileRow}>
+        <Avatar.Image
+          source={require("../../assets/images/brand.jpg")}
+        />
+        <View style={styles.info}>
+          <Title style={{ color: theme.colors.onBackground }}>Hi, I'm Jesse Mokolo👋</Title>
+          <Paragraph style={{ color: theme.colors.onBackground }}>
+            Final Year Software Engineering student passionate about mobile & backend development.
+          </Paragraph>
+          <View style={{ flexDirection: "row", marginTop: 8 }}>
+            <Button mode="contained" onPress={() => openLink("https://github.com/devwithjesse")} compact>
+              GitHub
+            </Button>
+            <Button
+              mode="outlined"
+              onPress={() => openLink("mailto:jessemokolo@gmail.com")}
+              style={{ marginLeft: 8 }}
+              compact
+            >
+              Email
+            </Button>
+          </View>
+        </View>
+      </View>
+
+      {/* Featured Project */}
+      <Card style={[styles.card, { backgroundColor: theme.colors.elevation.level2 }]}>
+        <Card.Title
+          title="Featured Project"
+          subtitle="UniPal - Campus AI Assistant"
+          left={(props) => <MaterialCommunityIcons {...props} name="robot" />}
+        />
+        <Card.Content>
+          <Paragraph style={{ color: theme.colors.onSurface }}>
+            Backend in Flask + Solid frontend. Assists students with campus tasks using AI and automation.
+          </Paragraph>
+        </Card.Content>
+        <Card.Actions>
+          <Button onPress={() => router.push("/projects")}>View More</Button>
+          <Button onPress={() => openLink("https://github.com/devwithjesse")}>Source</Button>
+        </Card.Actions>
+      </Card>
+
+      {/* Skills Section */}
+      <Card style={[styles.card, { backgroundColor: theme.colors.elevation.level2 }]}>
+        <Card.Content>
+          <Title style={{ color: theme.colors.onSurface }}>Skills</Title>
+          <View style={styles.chips}>
+            <Chip icon="react" style={styles.chip}>React Native</Chip>
+            <Chip icon="language-python" style={styles.chip}>Python</Chip>
+            <Chip icon="database" style={styles.chip}>SQLite</Chip>
+            <Chip icon="flask" style={styles.chip}>Flask</Chip>
+          </View>
+        </Card.Content>
+      </Card>
+
+      {/* Quick Links */}
+      <Card style={[styles.card, { backgroundColor: theme.colors.elevation.level2 }]}>
+        <Card.Title title="Quick Links" />
+        <Card.Content>
+          <View style={styles.links}>
+            <Button icon="briefcase" onPress={() => router.push("/work")}>Work</Button>
+            <Button icon="folder" onPress={() => router.push("/projects")}>Projects</Button>
+            <Button icon="help-circle" onPress={() => router.push("/faq")}>FAQ</Button>
+          </View>
+        </Card.Content>
+      </Card>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
+  container: { flex: 1 },
+  profileRow: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
+  info: { flex: 1, marginLeft: 12 },
+  card: { marginVertical: 8, borderRadius: 12 },
+  chips: { flexDirection: "row", flexWrap: "wrap", marginTop: 8 },
+  chip: { margin: 4 },
+  links: { flexDirection: "row", justifyContent: "space-around" },
 });

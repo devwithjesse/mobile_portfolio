@@ -1,33 +1,74 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+// app/(tabs)/_layout.tsx
+import React, { useContext } from "react";
+import { Tabs } from "expo-router";
+import { IconButton, useTheme } from "react-native-paper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { ThemeContext } from "../_layout"; // import global context
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function TabsLayout() {
+  const theme = useTheme();
+  const { isDark, toggleTheme } = useContext(ThemeContext);
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+        headerStyle: { backgroundColor: theme.colors.elevation.level2 },
+        headerTitleStyle: { color: theme.colors.onSurface },
+        tabBarStyle: { backgroundColor: theme.colors.elevation.level2 },
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
+        headerRight: () => (
+          <IconButton
+            icon={isDark ? "weather-sunny" : "weather-night"}
+            size={22}
+            onPress={toggleTheme}
+          />
+        ),
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Home",
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons name={focused ? "home" : "home-outline"} color={color} size={22} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="work"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Work",
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons name={focused ? "briefcase" : "briefcase-outline"} color={color} size={22} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="projects"
+        options={{
+          title: "Projects",
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons name={focused ? "folder-star" : "folder-star-outline"} color={color} size={22} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="faq"
+        options={{
+          title: "FAQ",
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons name={focused ? "help-circle" : "help-circle-outline"} color={color} size={22} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="contact"
+        options={{
+          title: "Contact",
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons name={focused ? "phone" : "phone-outline"} color={color} size={22} />
+          ),
         }}
       />
     </Tabs>
