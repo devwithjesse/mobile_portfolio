@@ -14,7 +14,7 @@ A modern portfolio mobile app built with **React Native (Expo)** and **TypeScrip
 
 ## 📱 Installation
 ```bash
-git clone https://github.com/<your-username>/<repo-name>.git
-cd <repo-name>
+git clone https://github.com/devwithjesse/mobile_portfolio.git
+cd test
 npm install
 npx expo start
